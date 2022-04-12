@@ -17,6 +17,7 @@ All the solution is based on docker for linux. So for start ETL Jobs run the fol
 ```
 docker-compose up -d
 ```
+The docker compose contains also a postgres and pgadmin service.
 
 ## Explanation
 
@@ -35,7 +36,10 @@ ENDDATETIME=
 is already coded. 
 If none of the previous is provided, the program will set start and end datetime to previous day from 00:00 to 23:00.    
 
-As part of the logic to avoid data duplication every project when has finished his job will create a file name denominated {start-nameoftheproject}
+As part of the logic to avoid data duplication every project when has finished his job will create a file name denominated {start-nameoftheproject.txt}
 (Ex: start-saver.txt) into the DATA_FOLDER.
 
-The docker compose contains also a postgres and pgadmin service.
+In the first version of the software take a long time running (above 13 mins only the transferer) now thanks to parallel task
+and db bulk ops take more or less 3:30 mins.
+
+
