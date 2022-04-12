@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Nuboj.Archiver.ETL.Cleaner": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

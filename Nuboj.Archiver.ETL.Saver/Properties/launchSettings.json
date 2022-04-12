@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "Nuboj.Archiver.ETL.Saver": {
+      "commandName": "Project",
+      "commandLineArgs": "\"2022-03-23T12:00:00\" \"2022-03-23T15:00:00\"",
+      "environmentVariables": {
+        "TENANT_ID": "7c201fd8-42bd-4333-914d-0f5822070757"
+      }
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

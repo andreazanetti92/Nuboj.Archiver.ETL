@@ -1,0 +1,103 @@
+version: '3.4'
+
+services:
+  nuboj.archiver.etl.saver:
+    container_name: saver
+    image: ${DOCKER_REGISTRY-}nubojarchiveretlsaver
+    build:
+      context: .
+      dockerfile: Nuboj.Archiver.ETL.Saver/Dockerfile
+    depends_on: 
+        - "postgres"
+    environment:
+        - TENANT_ID=7c201fd8-42bd-4333-914d-0f5822070757
+        - POSTGRES_CONN_STRING=Server=pgdb_etl;Port=5432;Database=etl;User id=saver;Password=saver;
+        - HOST=Server=pgdb_etl;
+        - PORT=Port=5432
+        - DB=Database=etl;
+        - USER=User Id=saver;
+        - PASS=Password=saver;
+    ports:
+        - "7001:7001"
+    volumes:
+        - DATA_FOLDER:/DATA_FOLDER
+    networks:
+        archiver-etl:
+            aliases: 
+                - saver
+
+  nuboj.archiver.etl.transferer:
+    container_name: transferer
+    image: ${DOCKER_REGISTRY-}nubojarchiveretltransferer
+    build:
+      context: .
+      dockerfile: Nuboj.Archiver.ETL.Transferer/Dockerfile
+    environment:
+        - TENANT_ID=7c201fd8-42bd-4333-914d-0f5822070757
+        - STARTDATETIME=$STARTDATETIME
+        - ENDDATETIME=$ENDDATETIME
+    ports:
+        - "7002:7002"
+    volumes:
+        - DATA_FOLDER:/DATA_FOLDER 
+        - C:/ACCOUNT_FOLDER:/ACCOUNT_FOLDER
+    networks:
+        archiver-etl:
+            aliases: 
+                - transferer
+
+  nuboj.archiver.etl.cleaner:
+    container_name: cleaner
+    image: ${DOCKER_REGISTRY-}nubojarchiveretlcleaner
+    build:
+      context: .
+      dockerfile: Nuboj.Archiver.ETL.Cleaner/Dockerfile
+    ports:
+        - "7003:7003"
+    volumes:
+        - DATA_FOLDER:/DATA_FOLDER 
+    networks:
+        archiver-etl:
+            aliases: 
+                - cleaner
+  
+  postgres:
+    container_name: pgdb_etl
+    image: postgres:alpine
+    restart: unless-stopped
+    environment:
+        - POSTGRES_USER=saver
+        - POSTGRES_PASSWORD=saver
+        - POSTGRES_DB=etl
+    ports:
+        - 5432:5432
+    networks:
+       archiver-etl:
+            aliases: 
+                - pgdb_etl
+    volumes:
+        - DATA_FOLDER:/DATA_FOLDER/postgres/
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    depends_on:
+        - postgres
+    restart: always
+    environment:
+        PGADMIN_DEFAULT_EMAIL: admin@admin.com
+        PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+        - "5050:80"
+    networks:
+        archiver-etl:
+            aliases: 
+                - pgadmin
+            
+networks:
+  archiver-etl:
+    driver: bridge
+
+volumes:
+  DATA_FOLDER:
+    external: true
