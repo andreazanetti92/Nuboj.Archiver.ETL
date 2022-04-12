@@ -55,8 +55,8 @@ while (true)
     }
     else if (!args.Any() || !DateTimeOffset.TryParse(envStartdatetime, out DateTimeOffset date) || string.IsNullOrEmpty(envStartdatetime))
     {
-        startdatetime = DateTimeOffset.UtcNow.AddDays(-23).ToString("yyyy-MM-ddT00:00:00");
-        enddatetime = DateTimeOffset.UtcNow.AddDays(-23).ToString("yyyy-MM-ddT23:00:00");
+        startdatetime = DateTimeOffset.UtcNow.AddDays(-1).ToString("yyyy-MM-ddT00:00:00");
+        enddatetime = DateTimeOffset.UtcNow.AddDays(-1).ToString("yyyy-MM-ddT23:00:00");
 
         Console.WriteLine($"{startdatetime} - {enddatetime}");
     }
